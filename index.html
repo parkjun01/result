@@ -203,6 +203,34 @@
     const val = (id) => document.getElementById(id).value;
     const setVal = (id, v) => document.getElementById(id).value = v;
 
+    // 로컬 스토리지 데이터 로드 (빠른 화면 표시 및 백업용)
+    function loadLocalData() {
+      try {
+        const saved = localStorage.getItem('evangelism_prefs');
+        if (saved) {
+          const data = JSON.parse(saved);
+          if (data.title) setVal('title', data.title);
+          if (data.campusName) setVal('campusName', data.campusName);
+          if (data.footerMessage !== undefined) setVal('footerMessage', data.footerMessage);
+          if (data.dateStr) setVal('dateStr', data.dateStr);
+          if (data.goals) {
+            const sections = ['overall', 'campus'];
+            const keys = ['단순', '유효', '침례', '출석'];
+            sections.forEach(sec => {
+              keys.forEach(k => {
+                if (data.goals[sec] && data.goals[sec][k] !== undefined) {
+                  setVal(`goal_${sec}_${k}`, data.goals[sec][k]);
+                }
+              });
+            });
+          }
+        }
+      } catch (e) { console.error("Local load error", e); }
+    }
+
+    // 초기 화면 그리기 전 로컬 데이터 먼저 불러오기
+    loadLocalData();
+
     // 데이터 로드
     async function loadData() {
       if (!user || !db) return;
@@ -249,6 +277,21 @@
     function scheduleSave() {
       renderOutput(); // 저장 예약과 동시에 화면 업데이트
       
+      // 로컬 스토리지에는 입력 즉시 저장 (새로고침 대비 완벽 방어)
+      try {
+        const localPrefs = {
+          title: val('title'),
+          campusName: val('campusName'),
+          dateStr: val('dateStr'),
+          footerMessage: val('footerMessage'),
+          goals: {
+            overall: { 단순: val('goal_overall_단순'), 유효: val('goal_overall_유효'), 침례: val('goal_overall_침례'), 출석: val('goal_overall_출석') },
+            campus: { 단순: val('goal_campus_단순'), 유효: val('goal_campus_유효'), 침례: val('goal_campus_침례'), 출석: val('goal_campus_출석') }
+          }
+        };
+        localStorage.setItem('evangelism_prefs', JSON.stringify(localPrefs));
+      } catch (e) {}
+
       if (!user || !db || !isLoaded) return;
       clearTimeout(saveTimeout);
       saveTimeout = setTimeout(() => {
