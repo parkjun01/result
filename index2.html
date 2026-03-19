@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>전도종합 계산기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 min-h-screen p-4 md:p-8">
+
+  <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
+    
+    <!-- 왼쪽: 입력 창 -->
+    <div class="w-full md:w-1/3 p-6 bg-gray-50 border-r flex flex-col h-auto md:h-[90vh]">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-indigo-700">
+        <i data-lucide="file-input" class="w-6 h-6"></i> 시그널 내용 입력
+      </h2>
+      <textarea
+        id="inputText"
+        class="w-full flex-1 p-3 border rounded-lg resize-none focus:ring-2 focus:ring-indigo-400 focus:outline-none text-sm leading-relaxed"
+        placeholder="시그널 결과를 붙여넣으세요..."
+      ></textarea>
+      <button
+        id="btnParse"
+        class="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors"
+      >
+        <i data-lucide="refresh-cw" class="w-5 h-5"></i> 자동 분석하기
+      </button>
+    </div>
+
+    <!-- 오른쪽: 결과 및 출력 -->
+    <div class="w-full md:w-2/3 p-6 flex flex-col h-auto md:h-[90vh] overflow-y-auto">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-indigo-700">
+        <i data-lucide="settings-2" class="w-6 h-6"></i> 결과 확인 및 수정
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-500 mb-1">보고서 제목</label>
+          <input id="title" class="border p-2 rounded w-full target-input" value="3월 둘째 주 전도 결과" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-500 mb-1">대학/기관 이름</label>
+          <input id="campusName" class="border p-2 rounded w-full target-input" value="충북대" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-500 mb-1">기준일</label>
+          <input type="date" id="dateStr" class="border p-2 rounded w-full target-input" />
+        </div>
+      </div>
+      
+      <div class="mb-6">
+        <label class="block text-xs font-bold text-gray-500 mb-1">하단 추가 멘트 (선택)</label>
+        <textarea
+          id="footerMessage"
+          class="border p-2 rounded w-full resize-none text-sm target-input"
+          rows="2"
+          placeholder="예: 모두 고생하셨습니다!"
+        ></textarea>
+      </div>
+
+      <div class="space-y-4">
+        <!-- 전연령 섹션 -->
+        <div class="bg-blue-50/50 border border-blue-100 p-4 rounded-lg">
+          <h3 class="font-bold text-blue-800 mb-2">✅ 전연령 통계</h3>
+          <div class="grid grid-cols-5 gap-2 text-sm text-center font-medium text-gray-500 mb-2">
+            <div></div><div>단순</div><div>유효</div><div>침례</div><div>출석</div>
+          </div>
+          <div class="grid grid-cols-5 gap-2 mb-2 items-center">
+            <div class="text-sm font-bold text-gray-600 text-center">목표</div>
+            <input id="goal_overall_단순" type="number" step="any" class="target-input border p-1 rounded w-full text-center bg-white" value="7000" />
+            <input id="goal_overall_유효" type="number" step="any" class="target-input border p-1 rounded w-full text-center bg-white" value="30" />
+            <input id="goal_overall_침례" type="number" step="any" class="target-input border p-1 rounded w-full text-center bg-white" value="15" />
+            <input id="goal_overall_출석" type="number" step="any" class="target-input border p-1 rounded w-full text-center bg-white" value="10" />
+          </div>
+          <div class="grid grid-cols-5 gap-2 items-center">
+            <div class="text-sm font-bold text-blue-600 text-center">결과</div>
+            <input id="res_overall_단순" type="number" step="any" class="target-input border border-blue-300 bg-blue-50 p-1 rounded w-full text-center font-semibold text-blue-900" value="0" />
+            <input id="res_overall_유효" type="number" step="any" class="target-input border border-blue-300 bg-blue-50 p-1 rounded w-full text-center font-semibold text-blue-900" value="0" />
+            <input id="res_overall_침례" type="number" step="any" class="target-input border border-blue-300 bg-blue-50 p-1 rounded w-full text-center font-semibold text-blue-900" value="0" />
+            <input id="res_overall_출석" type="number" step="any" class="target-input border border-blue-300 bg-blue-50 p-1 rounded w-full text-center font-semibold text-blue-900" value="0" />
+          </div>
+        </div>
+
+        <!-- 캠퍼스 섹션 -->
+        <div class="bg-green-50/50 border border-green-100 p-4 rounded-lg">
+          <h3 class="font-bold text-green-800 mb-2">✅ 캠퍼스 통계</h3>
+          <div class="grid grid-cols-5 gap-2 mb-2 items-center">
+            <div class="text-sm font-bold text-gray-600 text-center">목표</div>
+            <input id="goal_campus_단순" type="number" step="any" class="target-input border p-1 rounded w-full text-center bg-white" value="3000" />
+            <input id="goal_campus_유효" type="number" step="any" class="target-input border p-1 rounded w-full text-center bg-white" value="15" />
+            <input id="goal_campus_침례" type="number" step="any" class="target-input border p-1 rounded w-full text-center bg-white" value="8" />
+            <input id="goal_campus_출석" type="number" step="any" class="target-input border p-1 rounded w-full text-center bg-white" value="7" />
+          </div>
+          <div class="grid grid-cols-5 gap-2 items-center">
+            <div class="text-sm font-bold text-green-600 text-center">결과</div>
+            <input id="res_campus_단순" type="number" step="any" class="target-input border border-green-300 bg-green-50 p-1 rounded w-full text-center font-semibold text-green-900" value="0" />
+            <input id="res_campus_유효" type="number" step="any" class="target-input border border-green-300 bg-green-50 p-1 rounded w-full text-center font-semibold text-green-900" value="0" />
+            <input id="res_campus_침례" type="number" step="any" class="target-input border border-green-300 bg-green-50 p-1 rounded w-full text-center font-semibold text-green-900" value="0" />
+            <input id="res_campus_출석" type="number" step="any" class="target-input border border-green-300 bg-green-50 p-1 rounded w-full text-center font-semibold text-green-900" value="0" />
+          </div>
+        </div>
+
+        <!-- 전도왕 섹션 -->
+        <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+          <h3 class="font-bold text-yellow-800 mb-2">👑 전도왕 결과</h3>
+          <div class="grid grid-cols-5 gap-2 items-center">
+            <div class="text-sm font-bold text-yellow-700 text-center">결과</div>
+            <input id="res_king_단순" type="number" step="any" class="target-input border border-yellow-300 bg-white p-1 rounded w-full text-center font-semibold text-yellow-900" value="0" />
+            <input id="res_king_유효" type="number" step="any" class="target-input border border-yellow-300 bg-white p-1 rounded w-full text-center font-semibold text-yellow-900" value="0" />
+            <input id="res_king_침례" type="number" step="any" class="target-input border border-yellow-300 bg-white p-1 rounded w-full text-center font-semibold text-yellow-900" value="0" />
+            <input id="res_king_출석" type="number" step="any" class="target-input border border-yellow-300 bg-white p-1 rounded w-full text-center font-semibold text-yellow-900" value="0" />
+          </div>
+        </div>
+      </div>
+
+      <!-- 최종 출력 -->
+      <div class="mt-8 flex flex-col flex-1">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="font-bold text-gray-700">최종 출력 (미리보기)</h3>
+          <button
+            id="btnCopy"
+            class="bg-green-600 hover:bg-green-700 text-white text-sm font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors shadow"
+          >
+            <i data-lucide="clipboard-copy" class="w-4 h-4"></i> 복사하기
+          </button>
+        </div>
+        <textarea
+          id="outputText"
+          readonly
+          class="w-full flex-1 min-h-[250px] p-4 bg-gray-900 text-green-400 font-mono text-sm rounded-lg resize-none shadow-inner leading-relaxed"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="fixed bottom-6 right-6 bg-gray-800 text-white px-5 py-3 rounded-lg shadow-xl flex items-center gap-3 transition-opacity duration-300 opacity-0 pointer-events-none">
+    <i data-lucide="check-circle-2" class="w-6 h-6 text-green-400"></i>
+    <span class="font-bold">결과가 클립보드에 복사되었습니다!</span>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // 아이콘 렌더링
+    lucide.createIcons();
+
+    // 초기 날짜 세팅
+    const today = new Date();
+    const y = today.getFullYear();
+    const m = String(today.getMonth() + 1).padStart(2, '0');
+    const d = String(today.getDate()).padStart(2, '0');
+    document.getElementById('dateStr').value = `${y}-${m}-${d}`;
+
+    // Firebase 초기화
+    let app, auth, db, appId, user = null, isLoaded = false;
+    try {
+      if (typeof __firebase_config !== 'undefined') {
+        const firebaseConfig = JSON.parse(__firebase_config);
+        app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+        appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        const initAuth = async () => {
+          try {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+              await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+              await signInAnonymously(auth);
+            }
+          } catch (err) {
+            console.error("Auth error", err);
+          }
+        };
+        initAuth();
+
+        onAuthStateChanged(auth, async (u) => {
+          user = u;
+          if (user) await loadData();
+        });
+      } else {
+        isLoaded = true; // Firebase 환경이 아닐 경우
+      }
+    } catch (e) {
+      console.error("DB init error", e);
+      isLoaded = true;
+    }
+
+    // 엘리먼트 참조 가져오기 쉽게
+    const val = (id) => document.getElementById(id).value;
+    const setVal = (id, v) => document.getElementById(id).value = v;
+
+    // 데이터 로드
+    async function loadData() {
+      if (!user || !db) return;
+      try {
+        const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'preferences');
+        const snapshot = await getDoc(docRef);
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          if (data.title) setVal('title', data.title);
+          if (data.campusName) setVal('campusName', data.campusName);
+          if (data.footerMessage !== undefined) setVal('footerMessage', data.footerMessage);
+          
+          if (data.dateStr) {
+            let loadedDate = data.dateStr;
+            if (loadedDate.includes('.') && loadedDate.length === 8) {
+              const parts = loadedDate.split('.');
+              loadedDate = `20${parts[0]}-${parts[1]}-${parts[2]}`;
+            }
+            setVal('dateStr', loadedDate);
+          }
+
+          if (data.goals) {
+            const sections = ['overall', 'campus'];
+            const keys = ['단순', '유효', '침례', '출석'];
+            sections.forEach(sec => {
+              keys.forEach(k => {
+                if (data.goals[sec] && data.goals[sec][k] !== undefined) {
+                  setVal(`goal_${sec}_${k}`, data.goals[sec][k]);
+                }
+              });
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Load error", err);
+      } finally {
+        isLoaded = true;
+        renderOutput();
+      }
+    }
+
+    // 데이터 저장 (Debounce)
+    let saveTimeout;
+    function scheduleSave() {
+      renderOutput(); // 저장 예약과 동시에 화면 업데이트
+      
+      if (!user || !db || !isLoaded) return;
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        const prefs = {
+          title: val('title'),
+          campusName: val('campusName'),
+          dateStr: val('dateStr'),
+          footerMessage: val('footerMessage'),
+          goals: {
+            overall: {
+              단순: val('goal_overall_단순'), 유효: val('goal_overall_유효'), 침례: val('goal_overall_침례'), 출석: val('goal_overall_출석')
+            },
+            campus: {
+              단순: val('goal_campus_단순'), 유효: val('goal_campus_유효'), 침례: val('goal_campus_침례'), 출석: val('goal_campus_출석')
+            }
+          }
+        };
+        const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'preferences');
+        setDoc(docRef, prefs, { merge: true }).catch(console.error);
+      }, 1000);
+    }
+
+    // 입력값 변경 시 자동 업데이트/저장 이벤트 연결
+    document.querySelectorAll('.target-input').forEach(el => {
+      el.addEventListener('input', scheduleSave);
+    });
+
+    // 숫자 및 퍼센트 포맷
+    const formatNum = (strVal) => {
+      const num = Number(strVal) || 0;
+      return Number(Math.round(num * 10) / 10).toLocaleString('ko-KR');
+    };
+
+    const getPercent = (valStr, goalStr) => {
+      const val = Number(valStr) || 0;
+      const goal = Number(goalStr) || 0;
+      if (goal === 0) return '0';
+      const p = (val / goal) * 100;
+      const pStr = Math.round(p * 10) / 10;
+      return Number.isInteger(pStr) ? pStr : pStr.toFixed(1);
+    };
+
+    // 출력 생성 로직
+    function renderOutput() {
+      const title = val('title');
+      const campusName = val('campusName');
+      const dateStr = val('dateStr');
+      const footerMessage = val('footerMessage');
+
+      const o = { 단순: val('res_overall_단순'), 유효: val('res_overall_유효'), 침례: val('res_overall_침례'), 출석: val('res_overall_출석') };
+      const og = { 단순: val('goal_overall_단순'), 유효: val('goal_overall_유효'), 침례: val('goal_overall_침례'), 출석: val('goal_overall_출석') };
+      
+      const c = { 단순: val('res_campus_단순'), 유효: val('res_campus_유효'), 침례: val('res_campus_침례'), 출석: val('res_campus_출석') };
+      const cg = { 단순: val('goal_campus_단순'), 유효: val('goal_campus_유효'), 침례: val('goal_campus_침례'), 출석: val('goal_campus_출석') };
+      
+      const k = { 단순: val('res_king_단순'), 유효: val('res_king_유효'), 침례: val('res_king_침례'), 출석: val('res_king_출석') };
+
+      let selectedMonth = 3;
+      if (dateStr && dateStr.includes('-')) {
+        selectedMonth = parseInt(dateStr.split('-')[1], 10);
+      }
+
+      let kingSection = `👑${campusName} ${selectedMonth}월 전도왕👑\n\n`;
+      if (Number(k.단순) > 0) kingSection += `단순왕: ${formatNum(k.단순)}\n`;
+      if (Number(k.유효) > 0) kingSection += `유효왕: ${formatNum(k.유효)}\n`;
+      if (Number(k.침례) > 0) kingSection += `침례왕: ${formatNum(k.침례)}\n`;
+      if (Number(k.출석) > 0) kingSection += `출석왕: ${formatNum(k.출석)}\n`;
+
+      let displayDate = dateStr;
+      if (dateStr && dateStr.includes('-') && dateStr.length === 10) {
+        displayDate = `${dateStr.substring(2, 4)}.${dateStr.substring(5, 7)}.${dateStr.substring(8, 10)}`;
+      }
+
+      let finalOutput = `🌐${title}🌐
+
+✅️ 전연령(1/n)
+단순: ${formatNum(o.단순)}/${formatNum(og.단순)}(${getPercent(o.단순, og.단순)}%)
+유효: ${formatNum(o.유효)}/${formatNum(og.유효)}(${getPercent(o.유효, og.유효)}%)
+침례: ${formatNum(o.침례)}/${formatNum(og.침례)}(${getPercent(o.침례, og.침례)}%)
+출석: ${formatNum(o.출석)}/${formatNum(og.출석)}(${getPercent(o.출석, og.출석)}%)
+
+✅️ 캠퍼스
+단순: ${formatNum(c.단순)}/${formatNum(cg.단순)}(${getPercent(c.단순, cg.단순)}%)
+유효: ${formatNum(c.유효)}/${formatNum(cg.유효)}(${getPercent(c.유효, cg.유효)}%)
+침례: ${formatNum(c.침례)}/${formatNum(cg.침례)}(${getPercent(c.침례, cg.침례)}%)
+출석: ${formatNum(c.출석)}/${formatNum(cg.출석)}(${getPercent(c.출석, cg.출석)}%)
+
+${kingSection.trim()}
+
+(${displayDate}기준)`;
+
+      if (footerMessage.trim()) {
+        finalOutput += `\n\n${footerMessage.trim()}`;
+      }
+
+      document.getElementById('outputText').value = finalOutput;
+    }
+
+    // 파싱 (분석) 로직
+    document.getElementById('btnParse').addEventListener('click', () => {
+      const text = document.getElementById('inputText').value;
+      const lines = text.split('\n');
+      
+      let current_section = 'overall';
+      let seen_keys = new Set();
+
+      let totals = {
+        overall: { 단순: 0, 유효: 0, 침례: 0, 출석: 0 },
+        campus: { 단순: 0, 유효: 0, 침례: 0, 출석: 0 },
+      };
+      let kings = [];
+      let current_king = { 단순: 0, 유효: 0, 침례: 0, 출석: 0 };
+
+      for (let line of lines) {
+        line = line.trim();
+        if (!line) continue;
+
+        let section_changed = false;
+        if (line.includes('전도왕')) {
+          current_section = 'king';
+          current_king = { 단순: 0, 유효: 0, 침례: 0, 출석: 0 };
+          kings.push(current_king);
+          seen_keys.clear();
+          section_changed = true;
+        } else if (line.includes('소속대학') || line.includes('충북대') || line.includes('캠퍼스') || line.includes('대학')) {
+          current_section = 'campus';
+          seen_keys.clear();
+          section_changed = true;
+        }
+
+        if (section_changed) {
+          const hasKeyword = /(단순|유효|침례|출석)/.test(line);
+          const hasNumber = /\d/.test(line);
+          if (!hasKeyword && hasNumber) {
+            const cleanStr = line.replace(/,/g, '');
+            const numbers = cleanStr.match(/\d+(\.\d+)?/g);
+            if (numbers) {
+              const sum = numbers.reduce((acc, num) => acc + parseFloat(num), 0);
+              if (current_section === 'campus') totals.campus['단순'] += sum;
+              else if (current_section === 'king') current_king['단순'] += sum;
+              seen_keys.add('단순');
+            }
+            continue; 
+          } else if (hasKeyword && hasNumber) {
+            // 패스
+          } else {
+             continue;
+          }
+        }
+
+        const match = line.match(/^(?:[\s\-\[\]<>\*\.]*)(단순|유효|침례|출석)(?:[\s:\[\]<>\*\.]*)(.*)$/);
+        const numOnlyMatch = line.match(/^[\s\-\[\]<>\*\.]*([\d,\.]+)(?:명)?[\s\-\[\]<>\*\.]*$/);
+
+        if (match) {
+          const key = match[1];
+          const valStr = match[2];
+
+          if (seen_keys.has(key)) {
+            current_section = 'overall';
+            seen_keys.clear();
+          }
+          seen_keys.add(key);
+
+          const cleanStr = valStr.replace(/,/g, '');
+          const numbers = cleanStr.match(/\d+(\.\d+)?/g);
+          let sum = 0;
+          if (numbers) {
+            sum = numbers.reduce((acc, num) => acc + parseFloat(num), 0);
+          }
+
+          if (current_section === 'overall') {
+            totals.overall[key] += sum;
+          } else if (current_section === 'campus') {
+            totals.campus[key] += sum;
+          } else if (current_section === 'king') {
+            current_king[key] += sum;
+          }
+        } else if (numOnlyMatch && current_section !== 'overall') {
+          const expectedKeys = ['단순', '유효', '침례', '출석'];
+          let key = expectedKeys.find(k => !seen_keys.has(k));
+          
+          if (key) {
+            seen_keys.add(key);
+            const cleanStr = numOnlyMatch[1].replace(/,/g, '');
+            const sum = parseFloat(cleanStr) || 0;
+
+            if (current_section === 'campus') {
+              totals.campus[key] += sum;
+            } else if (current_section === 'king') {
+              current_king[key] += sum;
+            }
+          } else {
+            current_section = 'overall';
+            seen_keys.clear();
+          }
+        } else {
+          current_section = 'overall';
+          seen_keys.clear();
+        }
+      }
+
+      let kingMax = { 단순: 0, 유효: 0, 침례: 0, 출석: 0 };
+      if (kings.length > 0) {
+        for (const k of ['단순', '유효', '침례', '출석']) {
+          kingMax[k] = Math.max(...kings.map(king => king[k]));
+        }
+      }
+
+      if (kingMax.침례 === 0 && totals.overall.침례 > 0) kingMax.침례 = totals.overall.침례;
+      if (totals.campus.침례 === 0 && totals.overall.침례 > 0) totals.campus.침례 = totals.overall.침례;
+
+      // 파싱 결과 화면에 반영
+      setVal('res_overall_단순', String(Math.round(totals.overall.단순 * 10) / 10));
+      setVal('res_overall_유효', String(Math.round(totals.overall.유효 * 10) / 10));
+      setVal('res_overall_침례', String(Math.round(totals.overall.침례 * 10) / 10));
+      setVal('res_overall_출석', String(Math.round(totals.overall.출석 * 10) / 10));
+
+      setVal('res_campus_단순', String(Math.round(totals.campus.단순)));
+      setVal('res_campus_유효', String(Math.round(totals.campus.유효)));
+      setVal('res_campus_침례', String(Math.round(totals.campus.침례)));
+      setVal('res_campus_출석', String(Math.round(totals.campus.출석)));
+
+      setVal('res_king_단순', String(Math.round(kingMax.단순 * 10) / 10));
+      setVal('res_king_유효', String(Math.round(kingMax.유효 * 10) / 10));
+      setVal('res_king_침례', String(Math.round(kingMax.침례 * 10) / 10));
+      setVal('res_king_출석', String(Math.round(kingMax.출석 * 10) / 10));
+
+      scheduleSave(); // 다시 렌더링하고, 바뀐 값이 있다면 Firebase에도 저장(debounce)
+    });
+
+    // 복사 기능
+    document.getElementById('btnCopy').addEventListener('click', () => {
+      const textArea = document.createElement('textarea');
+      textArea.value = document.getElementById('outputText').value;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        const toast = document.getElementById('toast');
+        toast.classList.remove('opacity-0');
+        setTimeout(() => toast.classList.add('opacity-0'), 2000);
+      } catch (err) {
+        console.error('Copy failed', err);
+      }
+      document.body.removeChild(textArea);
+    });
+
+    // 초기 화면 그리기
+    renderOutput();
+  </script>
+</body>
+</html>
