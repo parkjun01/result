@@ -124,16 +124,74 @@
         </div>
       </div>
 
+      <!-- 연간 현황 섹션 (복사되는 출력 텍스트에는 포함되지 않음) -->
+      <div class="mt-6 bg-purple-50/50 border border-purple-100 p-4 rounded-lg">
+        <h3 class="font-bold text-purple-800 mb-1 flex items-center gap-2">
+          <i data-lucide="calendar-range" class="w-5 h-5"></i> 연간 현황 (<span id="annualYearLabel">-</span>년 누적)
+        </h3>
+        <p class="text-xs text-gray-500 mb-3">매달 1일에 '기록 저장'을 누르면 직전 달 결과가 자동으로 아래 연간 누적치에 더해집니다. (같은 달을 다시 저장하면 덮어쓰기만 됩니다)</p>
+
+        <div class="mb-4">
+          <h4 class="text-sm font-bold text-blue-700 mb-1">전연령</h4>
+          <div class="grid grid-cols-5 gap-2 text-xs text-center font-medium text-gray-500 mb-1">
+            <div></div><div>단순</div><div>유효</div><div>침례</div><div>출석</div>
+          </div>
+          <div class="grid grid-cols-5 gap-2 mb-1 items-center">
+            <div class="text-xs font-bold text-gray-600 text-center">연간목표</div>
+            <input id="goal_annual_overall_단순" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
+            <input id="goal_annual_overall_유효" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
+            <input id="goal_annual_overall_침례" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
+            <input id="goal_annual_overall_출석" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
+          </div>
+          <div class="grid grid-cols-5 gap-2 items-center">
+            <div class="text-xs font-bold text-purple-700 text-center">누적결과</div>
+            <div id="cum_annual_overall_단순" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
+            <div id="cum_annual_overall_유효" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
+            <div id="cum_annual_overall_침례" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
+            <div id="cum_annual_overall_출석" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-bold text-green-700 mb-1">캠퍼스</h4>
+          <div class="grid grid-cols-5 gap-2 text-xs text-center font-medium text-gray-500 mb-1">
+            <div></div><div>단순</div><div>유효</div><div>침례</div><div>출석</div>
+          </div>
+          <div class="grid grid-cols-5 gap-2 mb-1 items-center">
+            <div class="text-xs font-bold text-gray-600 text-center">연간목표</div>
+            <input id="goal_annual_campus_단순" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
+            <input id="goal_annual_campus_유효" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
+            <input id="goal_annual_campus_침례" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
+            <input id="goal_annual_campus_출석" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
+          </div>
+          <div class="grid grid-cols-5 gap-2 items-center">
+            <div class="text-xs font-bold text-purple-700 text-center">누적결과</div>
+            <div id="cum_annual_campus_단순" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
+            <div id="cum_annual_campus_유효" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
+            <div id="cum_annual_campus_침례" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
+            <div id="cum_annual_campus_출석" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
+          </div>
+        </div>
+      </div>
+
       <!-- 최종 출력 -->
       <div class="mt-8 flex flex-col flex-1">
         <div class="flex justify-between items-center mb-2">
           <h3 class="font-bold text-gray-700">최종 출력 (미리보기)</h3>
-          <button
-            id="btnCopy"
-            class="bg-green-600 hover:bg-green-700 text-white text-sm font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors shadow"
-          >
-            <i data-lucide="clipboard-copy" class="w-4 h-4"></i> 복사하기
-          </button>
+          <div class="flex gap-2">
+            <button
+              id="btnSaveRecord"
+              class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors shadow"
+            >
+              <i data-lucide="save" class="w-4 h-4"></i> 기록 저장
+            </button>
+            <button
+              id="btnCopy"
+              class="bg-green-600 hover:bg-green-700 text-white text-sm font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors shadow"
+            >
+              <i data-lucide="clipboard-copy" class="w-4 h-4"></i> 복사하기
+            </button>
+          </div>
         </div>
         <textarea
           id="outputText"
@@ -146,16 +204,166 @@
 
   <div id="toast" class="fixed bottom-6 right-6 bg-gray-800 text-white px-5 py-3 rounded-lg shadow-xl flex items-center gap-3 transition-opacity duration-300 opacity-0 pointer-events-none">
     <i data-lucide="check-circle-2" class="w-6 h-6 text-green-400"></i>
-    <span class="font-bold">결과가 클립보드에 복사되었습니다!</span>
+    <span id="toastMsg" class="font-bold">결과가 클립보드에 복사되었습니다!</span>
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
     // 아이콘 렌더링
     lucide.createIcons();
+
+    // Supabase 초기화
+    const SUPABASE_URL = "https://uospwzmrfaqypnwlhazd.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvc3B3em1yZmFxeXBud2xoYXpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxMzQxMjMsImV4cCI6MjA5NzcxMDEyM30.qszyTs4DwJSlQnWd4YUqIF27MixNQFRrnvDVD01HVaI";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let isLoaded = false;
+
+    // 엘리먼트 참조 가져오기 쉽게
+    const val = (id) => document.getElementById(id).value;
+    const setVal = (id, v) => document.getElementById(id).value = v;
+
+    function showToast(message) {
+      document.getElementById('toastMsg').textContent = message;
+      const toast = document.getElementById('toast');
+      toast.classList.remove('opacity-0');
+      setTimeout(() => toast.classList.add('opacity-0'), 2000);
+    }
+
+    // 해당 월 안에서 몇 주차인지 계산 (월요일 시작 기준)
+    function getWeekOfMonth(date) {
+      const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+      const firstDayOffset = (firstDay.getDay() + 6) % 7; // Mon=0 ... Sun=6
+      return Math.ceil((date.getDate() + firstDayOffset) / 7);
+    }
+
+    // 날짜가 속한 '실질적인' 연/월 계산
+    // 매달 1일이면 그 달이 아니라 직전 달의 결과를 다루는 것이므로 직전 달의 연/월을 반환
+    function getEffectivePeriod(dateStr) {
+      const d = new Date(`${dateStr}T00:00:00`);
+      if (d.getDate() === 1) {
+        const prevMonth = new Date(d.getFullYear(), d.getMonth() - 1, 1);
+        return { year: prevMonth.getFullYear(), month: prevMonth.getMonth() + 1, isMonthlyPeriod: true };
+      }
+      return { year: d.getFullYear(), month: d.getMonth() + 1, isMonthlyPeriod: false };
+    }
+
+    // 날짜 기준으로 제목/기록타입/기간키 계산
+    // 매달 1일이면 전달 전도결과(월간), 그 외에는 n월 m주차 전도결과(주간)
+    function computeAutoTitle(dateStr) {
+      const { year, month, isMonthlyPeriod } = getEffectivePeriod(dateStr);
+      if (isMonthlyPeriod) {
+        return {
+          title: `${month}월 전도결과`,
+          recordType: 'monthly',
+          periodKey: `${year}-${String(month).padStart(2, '0')}`,
+          year, month,
+        };
+      }
+      const week = getWeekOfMonth(new Date(`${dateStr}T00:00:00`));
+      return {
+        title: `${month}월 ${week}주차 전도결과`,
+        recordType: 'weekly',
+        periodKey: `${year}-${String(month).padStart(2, '0')}-W${week}`,
+        year, month,
+      };
+    }
+
+    function updateTitleFromDate() {
+      setVal('title', computeAutoTitle(val('dateStr')).title);
+    }
+
+    // ---- 연간 현황(연간목표 / 연간누적) ----
+    const ANNUAL_KEYS = ['단순', '유효', '침례', '출석'];
+    let annualYear = null;
+    let annualSums = {
+      overall: { 단순: 0, 유효: 0, 침례: 0, 출석: 0 },
+      campus: { 단순: 0, 유효: 0, 침례: 0, 출석: 0 },
+    };
+
+    function renderAnnualCumulative() {
+      ['overall', 'campus'].forEach(sec => {
+        ANNUAL_KEYS.forEach(k => {
+          const goalVal = Number(val(`goal_annual_${sec}_${k}`)) || 0;
+          const cum = annualSums[sec][k];
+          const pct = goalVal ? Math.round((cum / goalVal) * 1000) / 10 : 0;
+          document.getElementById(`cum_annual_${sec}_${k}`).textContent = `${formatNum(String(cum))} (${pct}%)`;
+        });
+      });
+    }
+
+    async function loadAnnualGoal(year) {
+      try {
+        const { data, error } = await supabase
+          .from('evangelism_yearly_goals')
+          .select('*')
+          .eq('year', year)
+          .maybeSingle();
+        if (error) throw error;
+        const og = (data && data.overall_goal) || {};
+        const cg = (data && data.campus_goal) || {};
+        ANNUAL_KEYS.forEach(k => {
+          setVal(`goal_annual_overall_${k}`, og[k] ?? 0);
+          setVal(`goal_annual_campus_${k}`, cg[k] ?? 0);
+        });
+      } catch (err) {
+        console.error("Annual goal load error", err);
+      }
+    }
+
+    async function loadAnnualCumulative(year) {
+      try {
+        const { data, error } = await supabase
+          .from('evangelism_monthly_contributions')
+          .select('overall, campus')
+          .eq('year', year);
+        if (error) throw error;
+        const sums = {
+          overall: { 단순: 0, 유효: 0, 침례: 0, 출석: 0 },
+          campus: { 단순: 0, 유효: 0, 침례: 0, 출석: 0 },
+        };
+        (data || []).forEach(row => {
+          ANNUAL_KEYS.forEach(k => {
+            sums.overall[k] += Number(row.overall && row.overall[k]) || 0;
+            sums.campus[k] += Number(row.campus && row.campus[k]) || 0;
+          });
+        });
+        annualSums = sums;
+      } catch (err) {
+        console.error("Annual cumulative load error", err);
+      } finally {
+        renderAnnualCumulative();
+      }
+    }
+
+    async function refreshAnnualSection(year) {
+      annualYear = year;
+      document.getElementById('annualYearLabel').textContent = year;
+      await loadAnnualGoal(year);
+      await loadAnnualCumulative(year);
+    }
+
+    // 연간목표 입력값 저장 (Debounce)
+    let annualSaveTimeout;
+    function scheduleAnnualGoalSave() {
+      renderAnnualCumulative();
+      clearTimeout(annualSaveTimeout);
+      annualSaveTimeout = setTimeout(() => {
+        const record = {
+          year: annualYear,
+          overall_goal: Object.fromEntries(ANNUAL_KEYS.map(k => [k, val(`goal_annual_overall_${k}`)])),
+          campus_goal: Object.fromEntries(ANNUAL_KEYS.map(k => [k, val(`goal_annual_campus_${k}`)])),
+          updated_at: new Date().toISOString(),
+        };
+        supabase.from('evangelism_yearly_goals').upsert(record).then(({ error }) => {
+          if (error) console.error("Annual goal save error", error);
+        });
+      }, 1000);
+    }
+
+    document.querySelectorAll('.annual-input').forEach(el => {
+      el.addEventListener('input', scheduleAnnualGoalSave);
+    });
 
     // 초기 날짜 세팅
     const today = new Date();
@@ -163,95 +371,29 @@
     const m = String(today.getMonth() + 1).padStart(2, '0');
     const d = String(today.getDate()).padStart(2, '0');
     document.getElementById('dateStr').value = `${y}-${m}-${d}`;
+    updateTitleFromDate();
+    refreshAnnualSection(getEffectivePeriod(val('dateStr')).year);
 
-    // Firebase 초기화
-    let app, auth, db, appId, user = null, isLoaded = false;
-    try {
-      if (typeof __firebase_config !== 'undefined') {
-        const firebaseConfig = JSON.parse(__firebase_config);
-        app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
-        appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    // 날짜가 바뀌면 제목/연간 현황도 자동으로 갱신
+    document.getElementById('dateStr').addEventListener('input', () => {
+      updateTitleFromDate();
+      const year = getEffectivePeriod(val('dateStr')).year;
+      if (year !== annualYear) refreshAnnualSection(year);
+      scheduleSave();
+    });
 
-        const initAuth = async () => {
-          try {
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-              await signInWithCustomToken(auth, __initial_auth_token);
-            } else {
-              await signInAnonymously(auth);
-            }
-          } catch (err) {
-            console.error("Auth error", err);
-          }
-        };
-        initAuth();
-
-        onAuthStateChanged(auth, async (u) => {
-          user = u;
-          if (user) await loadData();
-        });
-      } else {
-        isLoaded = true; // Firebase 환경이 아닐 경우
-      }
-    } catch (e) {
-      console.error("DB init error", e);
-      isLoaded = true;
-    }
-
-    // 엘리먼트 참조 가져오기 쉽게
-    const val = (id) => document.getElementById(id).value;
-    const setVal = (id, v) => document.getElementById(id).value = v;
-
-    // 로컬 스토리지 데이터 로드 (빠른 화면 표시 및 백업용)
-    function loadLocalData() {
-      try {
-        const saved = localStorage.getItem('evangelism_prefs');
-        if (saved) {
-          const data = JSON.parse(saved);
-          if (data.title) setVal('title', data.title);
-          if (data.campusName) setVal('campusName', data.campusName);
-          if (data.footerMessage !== undefined) setVal('footerMessage', data.footerMessage);
-          if (data.dateStr) setVal('dateStr', data.dateStr);
-          if (data.goals) {
-            const sections = ['overall', 'campus'];
-            const keys = ['단순', '유효', '침례', '출석'];
-            sections.forEach(sec => {
-              keys.forEach(k => {
-                if (data.goals[sec] && data.goals[sec][k] !== undefined) {
-                  setVal(`goal_${sec}_${k}`, data.goals[sec][k]);
-                }
-              });
-            });
-          }
-        }
-      } catch (e) { console.error("Local load error", e); }
-    }
-
-    // 초기 화면 그리기 전 로컬 데이터 먼저 불러오기
-    loadLocalData();
-
-    // 데이터 로드
+    // Supabase에서 저장된 설정값(목표치 등) 불러오기
     async function loadData() {
-      if (!user || !db) return;
       try {
-        const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'preferences');
-        const snapshot = await getDoc(docRef);
-        if (snapshot.exists()) {
-          const data = snapshot.data();
-          if (data.title) setVal('title', data.title);
-          if (data.campusName) setVal('campusName', data.campusName);
-          if (data.footerMessage !== undefined) setVal('footerMessage', data.footerMessage);
-          
-          if (data.dateStr) {
-            let loadedDate = data.dateStr;
-            if (loadedDate.includes('.') && loadedDate.length === 8) {
-              const parts = loadedDate.split('.');
-              loadedDate = `20${parts[0]}-${parts[1]}-${parts[2]}`;
-            }
-            setVal('dateStr', loadedDate);
-          }
-
+        const { data, error } = await supabase
+          .from('evangelism_settings')
+          .select('*')
+          .eq('id', 'default')
+          .maybeSingle();
+        if (error) throw error;
+        if (data) {
+          if (data.campus_name) setVal('campusName', data.campus_name);
+          if (data.footer_message !== null && data.footer_message !== undefined) setVal('footerMessage', data.footer_message);
           if (data.goals) {
             const sections = ['overall', 'campus'];
             const keys = ['단순', '유효', '침례', '출석'];
@@ -271,18 +413,43 @@
         renderOutput();
       }
     }
+    loadData();
+
+    // 로컬 스토리지 데이터 로드 (빠른 화면 표시 및 백업용)
+    function loadLocalData() {
+      try {
+        const saved = localStorage.getItem('evangelism_prefs');
+        if (saved) {
+          const data = JSON.parse(saved);
+          if (data.campusName) setVal('campusName', data.campusName);
+          if (data.footerMessage !== undefined) setVal('footerMessage', data.footerMessage);
+          if (data.goals) {
+            const sections = ['overall', 'campus'];
+            const keys = ['단순', '유효', '침례', '출석'];
+            sections.forEach(sec => {
+              keys.forEach(k => {
+                if (data.goals[sec] && data.goals[sec][k] !== undefined) {
+                  setVal(`goal_${sec}_${k}`, data.goals[sec][k]);
+                }
+              });
+            });
+          }
+        }
+      } catch (e) { console.error("Local load error", e); }
+    }
+
+    // 초기 화면 그리기 전 로컬 데이터 먼저 불러오기
+    loadLocalData();
 
     // 데이터 저장 (Debounce)
     let saveTimeout;
     function scheduleSave() {
       renderOutput(); // 저장 예약과 동시에 화면 업데이트
-      
+
       // 로컬 스토리지에는 입력 즉시 저장 (새로고침 대비 완벽 방어)
       try {
         const localPrefs = {
-          title: val('title'),
           campusName: val('campusName'),
-          dateStr: val('dateStr'),
           footerMessage: val('footerMessage'),
           goals: {
             overall: { 단순: val('goal_overall_단순'), 유효: val('goal_overall_유효'), 침례: val('goal_overall_침례'), 출석: val('goal_overall_출석') },
@@ -292,14 +459,13 @@
         localStorage.setItem('evangelism_prefs', JSON.stringify(localPrefs));
       } catch (e) {}
 
-      if (!user || !db || !isLoaded) return;
+      if (!isLoaded) return;
       clearTimeout(saveTimeout);
       saveTimeout = setTimeout(() => {
         const prefs = {
-          title: val('title'),
-          campusName: val('campusName'),
-          dateStr: val('dateStr'),
-          footerMessage: val('footerMessage'),
+          id: 'default',
+          campus_name: val('campusName'),
+          footer_message: val('footerMessage'),
           goals: {
             overall: {
               단순: val('goal_overall_단순'), 유효: val('goal_overall_유효'), 침례: val('goal_overall_침례'), 출석: val('goal_overall_출석')
@@ -307,16 +473,63 @@
             campus: {
               단순: val('goal_campus_단순'), 유효: val('goal_campus_유효'), 침례: val('goal_campus_침례'), 출석: val('goal_campus_출석')
             }
-          }
+          },
+          updated_at: new Date().toISOString()
         };
-        const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'preferences');
-        setDoc(docRef, prefs, { merge: true }).catch(console.error);
+        supabase.from('evangelism_settings').upsert(prefs).then(({ error }) => {
+          if (error) console.error("Save error", error);
+        });
       }, 1000);
     }
 
     // 입력값 변경 시 자동 업데이트/저장 이벤트 연결
     document.querySelectorAll('.target-input').forEach(el => {
       el.addEventListener('input', scheduleSave);
+    });
+
+    // 주간/월간 전도결과 기록을 Supabase에 이력으로 저장
+    document.getElementById('btnSaveRecord').addEventListener('click', async () => {
+      const meta = computeAutoTitle(val('dateStr'));
+      const record = {
+        record_type: meta.recordType,
+        period_key: meta.periodKey,
+        title: val('title'),
+        campus_name: val('campusName'),
+        date_str: val('dateStr'),
+        footer_message: val('footerMessage'),
+        data: {
+          overallGoal: { 단순: val('goal_overall_단순'), 유효: val('goal_overall_유효'), 침례: val('goal_overall_침례'), 출석: val('goal_overall_출석') },
+          overallRes: { 단순: val('res_overall_단순'), 유효: val('res_overall_유효'), 침례: val('res_overall_침례'), 출석: val('res_overall_출석') },
+          campusGoal: { 단순: val('goal_campus_단순'), 유효: val('goal_campus_유효'), 침례: val('goal_campus_침례'), 출석: val('goal_campus_출석') },
+          campusRes: { 단순: val('res_campus_단순'), 유효: val('res_campus_유효'), 침례: val('res_campus_침례'), 출석: val('res_campus_출석') },
+          kingRes: { 단순: val('res_king_단순'), 유효: val('res_king_유효'), 침례: val('res_king_침례'), 출석: val('res_king_출석') },
+        },
+      };
+      const { error } = await supabase.from('evangelism_records').insert(record);
+      if (error) {
+        console.error("Record save error", error);
+        showToast('기록 저장에 실패했습니다.');
+        return;
+      }
+
+      if (meta.recordType === 'monthly') {
+        const { error: contribError } = await supabase.from('evangelism_monthly_contributions').upsert({
+          year: meta.year,
+          month: meta.month,
+          overall: record.data.overallRes,
+          campus: record.data.campusRes,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'year,month' });
+        if (contribError) {
+          console.error("Annual contribution save error", contribError);
+          showToast('월간 기록은 저장됐지만 연간 누적 반영에 실패했습니다.');
+          return;
+        }
+        await loadAnnualCumulative(annualYear);
+        showToast('월간 기록이 저장되고 연간 누적에 반영되었습니다!');
+      } else {
+        showToast('주간 기록이 저장되었습니다!');
+      }
     });
 
     // 숫자 및 퍼센트 포맷
@@ -519,7 +732,7 @@ ${kingSection.trim()}
       setVal('res_king_침례', String(Math.round(kingMax.침례 * 10) / 10));
       setVal('res_king_출석', String(Math.round(kingMax.출석 * 10) / 10));
 
-      scheduleSave(); // 다시 렌더링하고, 바뀐 값이 있다면 Firebase에도 저장(debounce)
+      scheduleSave(); // 다시 렌더링하고, 바뀐 값이 있다면 Supabase에도 저장(debounce)
     });
 
     // 복사 기능
@@ -530,9 +743,7 @@ ${kingSection.trim()}
       textArea.select();
       try {
         document.execCommand('copy');
-        const toast = document.getElementById('toast');
-        toast.classList.remove('opacity-0');
-        setTimeout(() => toast.classList.add('opacity-0'), 2000);
+        showToast('결과가 클립보드에 복사되었습니다!');
       } catch (err) {
         console.error('Copy failed', err);
       }
