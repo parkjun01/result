@@ -18,8 +18,21 @@
     <p class="text-gray-500 mt-2 text-sm md:text-base font-medium">시그널 보고 결과를 붙여넣으면 깔끔하게 자동 계산 및 포맷팅 해줍니다.</p>
   </div>
 
-  <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-    
+  <!-- 탭 네비게이션 -->
+  <div class="max-w-6xl mx-auto mb-4 px-2 flex gap-2">
+    <button id="tabBtnCalculator" class="tab-btn px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-1.5 bg-indigo-600 text-white">
+      <i data-lucide="calculator" class="w-4 h-4"></i> 계산기
+    </button>
+    <button id="tabBtnMonthly" class="tab-btn px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-1.5 bg-white text-gray-600">
+      <i data-lucide="calendar-check" class="w-4 h-4"></i> 월별 기록
+    </button>
+    <button id="tabBtnAnnual" class="tab-btn px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-1.5 bg-white text-gray-600">
+      <i data-lucide="calendar-range" class="w-4 h-4"></i> 연간 현황
+    </button>
+  </div>
+
+  <div id="viewCalculator" class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
+
     <!-- 왼쪽: 입력 창 -->
     <div class="w-full md:w-1/3 p-6 bg-gray-50 border-r flex flex-col h-auto md:h-[90vh]">
       <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-indigo-700">
@@ -124,64 +137,6 @@
         </div>
       </div>
 
-      <!-- 연간 현황 섹션 (복사되는 출력 텍스트에는 포함되지 않음) -->
-      <div class="mt-6 bg-purple-50/50 border border-purple-100 p-4 rounded-lg">
-        <div class="flex items-center justify-between mb-1">
-          <h3 class="font-bold text-purple-800 flex items-center gap-2">
-            <i data-lucide="calendar-range" class="w-5 h-5"></i> 연간 현황
-          </h3>
-          <div class="flex items-center gap-1">
-            <button id="btnAnnualPrev" class="w-7 h-7 flex items-center justify-center rounded bg-purple-100 hover:bg-purple-200 text-purple-700 font-bold">‹</button>
-            <input id="annualYearPicker" type="number" step="1" class="w-20 border border-purple-200 rounded p-1 text-center font-bold text-purple-800 text-sm" />
-            <span class="text-xs text-purple-700 font-bold">년</span>
-            <button id="btnAnnualNext" class="w-7 h-7 flex items-center justify-center rounded bg-purple-100 hover:bg-purple-200 text-purple-700 font-bold">›</button>
-          </div>
-        </div>
-        <p class="text-xs text-gray-500 mb-3">매달 1일에 '기록 저장'을 누르면 직전 달 결과가 자동으로 위에서 선택된 연도의 누적치에 더해집니다. (같은 달을 다시 저장하면 덮어쓰기만 됩니다). 연도를 바꿔서 다른 해의 목표/누적치도 확인·입력할 수 있습니다.</p>
-
-        <div class="mb-4">
-          <h4 class="text-sm font-bold text-blue-700 mb-1">전연령</h4>
-          <div class="grid grid-cols-5 gap-2 text-xs text-center font-medium text-gray-500 mb-1">
-            <div></div><div>단순</div><div>유효</div><div>침례</div><div>출석</div>
-          </div>
-          <div class="grid grid-cols-5 gap-2 mb-1 items-center">
-            <div class="text-xs font-bold text-gray-600 text-center">연간목표</div>
-            <input id="goal_annual_overall_단순" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
-            <input id="goal_annual_overall_유효" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
-            <input id="goal_annual_overall_침례" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
-            <input id="goal_annual_overall_출석" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
-          </div>
-          <div class="grid grid-cols-5 gap-2 items-center">
-            <div class="text-xs font-bold text-purple-700 text-center">누적결과</div>
-            <div id="cum_annual_overall_단순" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
-            <div id="cum_annual_overall_유효" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
-            <div id="cum_annual_overall_침례" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
-            <div id="cum_annual_overall_출석" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
-          </div>
-        </div>
-
-        <div>
-          <h4 class="text-sm font-bold text-green-700 mb-1">캠퍼스</h4>
-          <div class="grid grid-cols-5 gap-2 text-xs text-center font-medium text-gray-500 mb-1">
-            <div></div><div>단순</div><div>유효</div><div>침례</div><div>출석</div>
-          </div>
-          <div class="grid grid-cols-5 gap-2 mb-1 items-center">
-            <div class="text-xs font-bold text-gray-600 text-center">연간목표</div>
-            <input id="goal_annual_campus_단순" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
-            <input id="goal_annual_campus_유효" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
-            <input id="goal_annual_campus_침례" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
-            <input id="goal_annual_campus_출석" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
-          </div>
-          <div class="grid grid-cols-5 gap-2 items-center">
-            <div class="text-xs font-bold text-purple-700 text-center">누적결과</div>
-            <div id="cum_annual_campus_단순" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
-            <div id="cum_annual_campus_유효" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
-            <div id="cum_annual_campus_침례" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
-            <div id="cum_annual_campus_출석" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
-          </div>
-        </div>
-      </div>
-
       <!-- 최종 출력 -->
       <div class="mt-8 flex flex-col flex-1">
         <div class="flex justify-between items-center mb-2">
@@ -210,6 +165,95 @@
     </div>
   </div>
 
+  <!-- 월별 기록 탭 -->
+  <section id="viewMonthly" class="hidden max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-bold text-indigo-700 flex items-center gap-2">
+        <i data-lucide="calendar-check" class="w-6 h-6"></i> 월별 기록
+      </h2>
+      <button id="btnRefreshMonthly" class="text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold py-1.5 px-3 rounded-lg flex items-center gap-1">
+        <i data-lucide="refresh-cw" class="w-4 h-4"></i> 새로고침
+      </button>
+    </div>
+    <p class="text-xs text-gray-500 mb-4">매달 1일에 '기록 저장'을 누르면 여기에 그 달의 결과가 쌓입니다. 각 카드는 계산기와 동일한 양식이라 바로 복사해서 쓸 수 있습니다.</p>
+    <div id="monthlyList" class="space-y-4">
+      <p class="text-gray-400 text-sm">불러오는 중...</p>
+    </div>
+  </section>
+
+  <!-- 연간 현황 탭 -->
+  <section id="viewAnnual" class="hidden max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-6">
+    <div class="flex items-center justify-between mb-1">
+      <h2 class="text-xl font-bold text-purple-800 flex items-center gap-2">
+        <i data-lucide="calendar-range" class="w-6 h-6"></i> 연간 현황
+      </h2>
+      <div class="flex items-center gap-1">
+        <button id="btnAnnualPrev" class="w-7 h-7 flex items-center justify-center rounded bg-purple-100 hover:bg-purple-200 text-purple-700 font-bold">‹</button>
+        <input id="annualYearPicker" type="number" step="1" class="w-20 border border-purple-200 rounded p-1 text-center font-bold text-purple-800 text-sm" />
+        <span class="text-xs text-purple-700 font-bold">년</span>
+        <button id="btnAnnualNext" class="w-7 h-7 flex items-center justify-center rounded bg-purple-100 hover:bg-purple-200 text-purple-700 font-bold">›</button>
+      </div>
+    </div>
+    <p class="text-xs text-gray-500 mb-4">매달 1일에 '기록 저장'을 누르면 직전 달 결과가 자동으로 위에서 선택된 연도의 누적치에 더해집니다 (같은 달을 다시 저장하면 덮어쓰기만 됩니다). 연도를 바꿔서 다른 해의 목표/누적치도 확인·입력할 수 있습니다.</p>
+
+    <div class="mb-4 bg-purple-50/50 border border-purple-100 p-4 rounded-lg">
+      <h3 class="text-sm font-bold text-blue-700 mb-1">전연령</h3>
+      <div class="grid grid-cols-5 gap-2 text-xs text-center font-medium text-gray-500 mb-1">
+        <div></div><div>단순</div><div>유효</div><div>침례</div><div>출석</div>
+      </div>
+      <div class="grid grid-cols-5 gap-2 mb-1 items-center">
+        <div class="text-xs font-bold text-gray-600 text-center">연간목표</div>
+        <input id="goal_annual_overall_단순" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
+        <input id="goal_annual_overall_유효" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
+        <input id="goal_annual_overall_침례" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
+        <input id="goal_annual_overall_출석" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
+      </div>
+      <div class="grid grid-cols-5 gap-2 items-center">
+        <div class="text-xs font-bold text-purple-700 text-center">누적결과</div>
+        <div id="cum_annual_overall_단순" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
+        <div id="cum_annual_overall_유효" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
+        <div id="cum_annual_overall_침례" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
+        <div id="cum_annual_overall_출석" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
+      </div>
+    </div>
+
+    <div class="mb-6 bg-purple-50/50 border border-purple-100 p-4 rounded-lg">
+      <h3 class="text-sm font-bold text-green-700 mb-1">캠퍼스</h3>
+      <div class="grid grid-cols-5 gap-2 text-xs text-center font-medium text-gray-500 mb-1">
+        <div></div><div>단순</div><div>유효</div><div>침례</div><div>출석</div>
+      </div>
+      <div class="grid grid-cols-5 gap-2 mb-1 items-center">
+        <div class="text-xs font-bold text-gray-600 text-center">연간목표</div>
+        <input id="goal_annual_campus_단순" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
+        <input id="goal_annual_campus_유효" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
+        <input id="goal_annual_campus_침례" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
+        <input id="goal_annual_campus_출석" type="number" step="any" class="annual-input border p-1 rounded w-full text-center bg-white text-sm" value="0" />
+      </div>
+      <div class="grid grid-cols-5 gap-2 items-center">
+        <div class="text-xs font-bold text-purple-700 text-center">누적결과</div>
+        <div id="cum_annual_campus_단순" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
+        <div id="cum_annual_campus_유효" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
+        <div id="cum_annual_campus_침례" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
+        <div id="cum_annual_campus_출석" class="border border-purple-200 bg-purple-50 p-1 rounded w-full text-center text-sm font-semibold text-purple-900">0 (0%)</div>
+      </div>
+    </div>
+
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="font-bold text-gray-700">연간 누적 출력 (복사용)</h3>
+      <button
+        id="btnCopyAnnual"
+        class="bg-green-600 hover:bg-green-700 text-white text-sm font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors shadow"
+      >
+        <i data-lucide="clipboard-copy" class="w-4 h-4"></i> 복사하기
+      </button>
+    </div>
+    <textarea
+      id="annualReportText"
+      readonly
+      class="w-full min-h-[220px] p-4 bg-gray-900 text-green-400 font-mono text-sm rounded-lg resize-none shadow-inner leading-relaxed"
+    ></textarea>
+  </section>
+
   <div id="toast" class="fixed bottom-6 right-6 bg-gray-800 text-white px-5 py-3 rounded-lg shadow-xl flex items-center gap-3 transition-opacity duration-300 opacity-0 pointer-events-none">
     <i data-lucide="check-circle-2" class="w-6 h-6 text-green-400"></i>
     <span id="toastMsg" class="font-bold">결과가 클립보드에 복사되었습니다!</span>
@@ -237,6 +281,40 @@
       toast.classList.remove('opacity-0');
       setTimeout(() => toast.classList.add('opacity-0'), 2000);
     }
+
+    function copyTextToClipboard(text, message) {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showToast(message || '복사되었습니다!');
+      } catch (err) {
+        console.error('Copy failed', err);
+      }
+      document.body.removeChild(textArea);
+    }
+
+    // ---- 탭 전환 ----
+    function setActiveTab(tab) {
+      const views = { calculator: 'viewCalculator', monthly: 'viewMonthly', annual: 'viewAnnual' };
+      const btns = { calculator: 'tabBtnCalculator', monthly: 'tabBtnMonthly', annual: 'tabBtnAnnual' };
+      Object.keys(views).forEach(key => {
+        document.getElementById(views[key]).classList.toggle('hidden', key !== tab);
+        const btn = document.getElementById(btns[key]);
+        btn.classList.toggle('bg-indigo-600', key === tab);
+        btn.classList.toggle('text-white', key === tab);
+        btn.classList.toggle('bg-white', key !== tab);
+        btn.classList.toggle('text-gray-600', key !== tab);
+      });
+      if (tab === 'monthly') loadMonthlyRecords();
+      lucide.createIcons();
+    }
+    document.getElementById('tabBtnCalculator').addEventListener('click', () => setActiveTab('calculator'));
+    document.getElementById('tabBtnMonthly').addEventListener('click', () => setActiveTab('monthly'));
+    document.getElementById('tabBtnAnnual').addEventListener('click', () => setActiveTab('annual'));
+    document.getElementById('btnRefreshMonthly').addEventListener('click', () => loadMonthlyRecords());
 
     // 해당 월 안에서 몇 주차인지 계산 (월요일 시작 기준)
     function getWeekOfMonth(date) {
@@ -298,6 +376,30 @@
           document.getElementById(`cum_annual_${sec}_${k}`).textContent = `${formatNum(String(cum))} (${pct}%)`;
         });
       });
+
+      const goals = {
+        overall: Object.fromEntries(ANNUAL_KEYS.map(k => [k, val(`goal_annual_overall_${k}`)])),
+        campus: Object.fromEntries(ANNUAL_KEYS.map(k => [k, val(`goal_annual_campus_${k}`)])),
+      };
+      const reportEl = document.getElementById('annualReportText');
+      if (reportEl) reportEl.value = buildAnnualReportText(annualYear, goals, annualSums);
+    }
+
+    // 연간 누적 복사용 출력 텍스트 생성
+    function buildAnnualReportText(year, goals, sums) {
+      return `🌐${year}년 전도결과(연간 누적)🌐
+
+✅️ 전연령
+단순: ${formatNum(sums.overall.단순)}/${formatNum(goals.overall.단순)}(${getPercent(sums.overall.단순, goals.overall.단순)}%)
+유효: ${formatNum(sums.overall.유효)}/${formatNum(goals.overall.유효)}(${getPercent(sums.overall.유효, goals.overall.유효)}%)
+침례: ${formatNum(sums.overall.침례)}/${formatNum(goals.overall.침례)}(${getPercent(sums.overall.침례, goals.overall.침례)}%)
+출석: ${formatNum(sums.overall.출석)}/${formatNum(goals.overall.출석)}(${getPercent(sums.overall.출석, goals.overall.출석)}%)
+
+✅️ 캠퍼스
+단순: ${formatNum(sums.campus.단순)}/${formatNum(goals.campus.단순)}(${getPercent(sums.campus.단순, goals.campus.단순)}%)
+유효: ${formatNum(sums.campus.유효)}/${formatNum(goals.campus.유효)}(${getPercent(sums.campus.유효, goals.campus.유효)}%)
+침례: ${formatNum(sums.campus.침례)}/${formatNum(goals.campus.침례)}(${getPercent(sums.campus.침례, goals.campus.침례)}%)
+출석: ${formatNum(sums.campus.출석)}/${formatNum(goals.campus.출석)}(${getPercent(sums.campus.출석, goals.campus.출석)}%)`;
     }
 
     async function loadAnnualGoal(year) {
@@ -567,20 +669,9 @@
       return Number.isInteger(pStr) ? pStr : pStr.toFixed(1);
     };
 
-    // 출력 생성 로직
-    function renderOutput() {
-      const title = val('title');
-      const campusName = val('campusName');
-      const dateStr = val('dateStr');
-      const footerMessage = val('footerMessage');
-
-      const o = { 단순: val('res_overall_단순'), 유효: val('res_overall_유효'), 침례: val('res_overall_침례'), 출석: val('res_overall_출석') };
-      const og = { 단순: val('goal_overall_단순'), 유효: val('goal_overall_유효'), 침례: val('goal_overall_침례'), 출석: val('goal_overall_출석') };
-      
-      const c = { 단순: val('res_campus_단순'), 유효: val('res_campus_유효'), 침례: val('res_campus_침례'), 출석: val('res_campus_출석') };
-      const cg = { 단순: val('goal_campus_단순'), 유효: val('goal_campus_유효'), 침례: val('goal_campus_침례'), 출석: val('goal_campus_출석') };
-      
-      const k = { 단순: val('res_king_단순'), 유효: val('res_king_유효'), 침례: val('res_king_침례'), 출석: val('res_king_출석') };
+    // 출력 텍스트 생성 (계산기 화면과 월별 기록 탭이 공유하는 순수 함수)
+    function buildReportText({ title, campusName, dateStr, footerMessage, overallRes, overallGoal, campusRes, campusGoal, kingRes }) {
+      const o = overallRes, og = overallGoal, c = campusRes, cg = campusGoal, k = kingRes;
 
       let selectedMonth = 3;
       if (dateStr && dateStr.includes('-')) {
@@ -616,11 +707,96 @@ ${kingSection.trim()}
 
 (${displayDate}기준)`;
 
-      if (footerMessage.trim()) {
+      if (footerMessage && footerMessage.trim()) {
         finalOutput += `\n\n${footerMessage.trim()}`;
       }
 
+      return finalOutput;
+    }
+
+    // 출력 생성 로직
+    function renderOutput() {
+      const finalOutput = buildReportText({
+        title: val('title'),
+        campusName: val('campusName'),
+        dateStr: val('dateStr'),
+        footerMessage: val('footerMessage'),
+        overallRes: { 단순: val('res_overall_단순'), 유효: val('res_overall_유효'), 침례: val('res_overall_침례'), 출석: val('res_overall_출석') },
+        overallGoal: { 단순: val('goal_overall_단순'), 유효: val('goal_overall_유효'), 침례: val('goal_overall_침례'), 출석: val('goal_overall_출석') },
+        campusRes: { 단순: val('res_campus_단순'), 유효: val('res_campus_유효'), 침례: val('res_campus_침례'), 출석: val('res_campus_출석') },
+        campusGoal: { 단순: val('goal_campus_단순'), 유효: val('goal_campus_유효'), 침례: val('goal_campus_침례'), 출석: val('goal_campus_출석') },
+        kingRes: { 단순: val('res_king_단순'), 유효: val('res_king_유효'), 침례: val('res_king_침례'), 출석: val('res_king_출석') },
+      });
       document.getElementById('outputText').value = finalOutput;
+    }
+
+    // 월별 기록 탭: 저장된 월간 기록을 계산기와 같은 양식으로 나열
+    async function loadMonthlyRecords() {
+      const listEl = document.getElementById('monthlyList');
+      listEl.innerHTML = '';
+      listEl.appendChild(Object.assign(document.createElement('p'), { className: 'text-gray-400 text-sm', textContent: '불러오는 중...' }));
+      try {
+        const { data, error } = await supabase
+          .from('evangelism_records')
+          .select('*')
+          .eq('record_type', 'monthly')
+          .order('period_key', { ascending: false });
+        if (error) throw error;
+
+        listEl.innerHTML = '';
+        if (!data || data.length === 0) {
+          listEl.appendChild(Object.assign(document.createElement('p'), { className: 'text-gray-400 text-sm', textContent: '저장된 월별 기록이 없습니다.' }));
+          return;
+        }
+        data.forEach(record => {
+          const text = buildReportText({
+            title: record.title,
+            campusName: record.campus_name,
+            dateStr: record.date_str,
+            footerMessage: record.footer_message || '',
+            overallRes: record.data.overallRes,
+            overallGoal: record.data.overallGoal,
+            campusRes: record.data.campusRes,
+            campusGoal: record.data.campusGoal,
+            kingRes: record.data.kingRes,
+          });
+          listEl.appendChild(buildMonthlyCard(record, text));
+        });
+        lucide.createIcons();
+      } catch (err) {
+        console.error("Monthly list load error", err);
+        listEl.innerHTML = '';
+        listEl.appendChild(Object.assign(document.createElement('p'), { className: 'text-red-500 text-sm', textContent: '불러오기에 실패했습니다.' }));
+      }
+    }
+
+    function buildMonthlyCard(record, text) {
+      const card = document.createElement('div');
+      card.className = 'border rounded-lg p-4 bg-gray-50';
+
+      const header = document.createElement('div');
+      header.className = 'flex items-center justify-between mb-2';
+
+      const h3 = document.createElement('h3');
+      h3.className = 'font-bold text-gray-700';
+      h3.textContent = `${record.title} (${record.period_key})`;
+
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'bg-green-600 hover:bg-green-700 text-white text-xs font-bold py-1.5 px-3 rounded-lg flex items-center gap-1';
+      copyBtn.innerHTML = '<i data-lucide="clipboard-copy" class="w-3.5 h-3.5"></i> 복사';
+      copyBtn.addEventListener('click', () => copyTextToClipboard(text));
+
+      header.appendChild(h3);
+      header.appendChild(copyBtn);
+
+      const textarea = document.createElement('textarea');
+      textarea.readOnly = true;
+      textarea.className = 'w-full min-h-[220px] p-3 bg-gray-900 text-green-400 font-mono text-xs rounded-lg resize-none leading-relaxed';
+      textarea.value = text;
+
+      card.appendChild(header);
+      card.appendChild(textarea);
+      return card;
     }
 
     // 파싱 (분석) 로직
@@ -757,21 +933,16 @@ ${kingSection.trim()}
 
     // 복사 기능
     document.getElementById('btnCopy').addEventListener('click', () => {
-      const textArea = document.createElement('textarea');
-      textArea.value = document.getElementById('outputText').value;
-      document.body.appendChild(textArea);
-      textArea.select();
-      try {
-        document.execCommand('copy');
-        showToast('결과가 클립보드에 복사되었습니다!');
-      } catch (err) {
-        console.error('Copy failed', err);
-      }
-      document.body.removeChild(textArea);
+      copyTextToClipboard(document.getElementById('outputText').value, '결과가 클립보드에 복사되었습니다!');
+    });
+
+    document.getElementById('btnCopyAnnual').addEventListener('click', () => {
+      copyTextToClipboard(document.getElementById('annualReportText').value, '연간 누적 결과가 클립보드에 복사되었습니다!');
     });
 
     // 초기 화면 그리기
     renderOutput();
+    setActiveTab('calculator');
   </script>
 </body>
 </html>
