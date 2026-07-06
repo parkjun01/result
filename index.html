@@ -126,10 +126,18 @@
 
       <!-- 연간 현황 섹션 (복사되는 출력 텍스트에는 포함되지 않음) -->
       <div class="mt-6 bg-purple-50/50 border border-purple-100 p-4 rounded-lg">
-        <h3 class="font-bold text-purple-800 mb-1 flex items-center gap-2">
-          <i data-lucide="calendar-range" class="w-5 h-5"></i> 연간 현황 (<span id="annualYearLabel">-</span>년 누적)
-        </h3>
-        <p class="text-xs text-gray-500 mb-3">매달 1일에 '기록 저장'을 누르면 직전 달 결과가 자동으로 아래 연간 누적치에 더해집니다. (같은 달을 다시 저장하면 덮어쓰기만 됩니다)</p>
+        <div class="flex items-center justify-between mb-1">
+          <h3 class="font-bold text-purple-800 flex items-center gap-2">
+            <i data-lucide="calendar-range" class="w-5 h-5"></i> 연간 현황
+          </h3>
+          <div class="flex items-center gap-1">
+            <button id="btnAnnualPrev" class="w-7 h-7 flex items-center justify-center rounded bg-purple-100 hover:bg-purple-200 text-purple-700 font-bold">‹</button>
+            <input id="annualYearPicker" type="number" step="1" class="w-20 border border-purple-200 rounded p-1 text-center font-bold text-purple-800 text-sm" />
+            <span class="text-xs text-purple-700 font-bold">년</span>
+            <button id="btnAnnualNext" class="w-7 h-7 flex items-center justify-center rounded bg-purple-100 hover:bg-purple-200 text-purple-700 font-bold">›</button>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 mb-3">매달 1일에 '기록 저장'을 누르면 직전 달 결과가 자동으로 위에서 선택된 연도의 누적치에 더해집니다. (같은 달을 다시 저장하면 덮어쓰기만 됩니다). 연도를 바꿔서 다른 해의 목표/누적치도 확인·입력할 수 있습니다.</p>
 
         <div class="mb-4">
           <h4 class="text-sm font-bold text-blue-700 mb-1">전연령</h4>
@@ -338,10 +346,22 @@
 
     async function refreshAnnualSection(year) {
       annualYear = year;
-      document.getElementById('annualYearLabel').textContent = year;
+      document.getElementById('annualYearPicker').value = year;
       await loadAnnualGoal(year);
       await loadAnnualCumulative(year);
     }
+
+    // 연도 선택기: 기준일과 상관없이 원하는 연도의 목표/누적치를 직접 조회·입력
+    document.getElementById('annualYearPicker').addEventListener('change', () => {
+      const year = parseInt(val('annualYearPicker'), 10);
+      if (Number.isFinite(year)) refreshAnnualSection(year);
+    });
+    document.getElementById('btnAnnualPrev').addEventListener('click', () => {
+      refreshAnnualSection((annualYear ?? new Date().getFullYear()) - 1);
+    });
+    document.getElementById('btnAnnualNext').addEventListener('click', () => {
+      refreshAnnualSection((annualYear ?? new Date().getFullYear()) + 1);
+    });
 
     // 연간목표 입력값 저장 (Debounce)
     let annualSaveTimeout;
