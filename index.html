@@ -733,7 +733,10 @@
           overallRes: { 단순: val('res_overall_단순'), 유효: val('res_overall_유효'), 침례: val('res_overall_침례'), 출석: val('res_overall_출석') },
           campusGoal: { 단순: val('goal_campus_단순'), 유효: val('goal_campus_유효'), 침례: val('goal_campus_침례'), 출석: val('goal_campus_출석') },
           campusRes: { 단순: val('res_campus_단순'), 유효: val('res_campus_유효'), 침례: val('res_campus_침례'), 출석: val('res_campus_출석') },
-          kingRes: { 단순: val('res_king_단순'), 유효: val('res_king_유효'), 침례: val('res_king_침례'), 출석: val('res_king_출석') },
+          // 전도왕은 월간 기록에는 저장하지 않음
+          kingRes: meta.recordType === 'monthly'
+            ? null
+            : { 단순: val('res_king_단순'), 유효: val('res_king_유효'), 침례: val('res_king_침례'), 출석: val('res_king_출석') },
         },
       };
       const { error } = await supabase.from('evangelism_records').insert(record);
@@ -787,11 +790,15 @@
         selectedMonth = parseInt(dateStr.split('-')[1], 10);
       }
 
-      let kingSection = `👑${campusName} ${selectedMonth}월 전도왕👑\n\n`;
-      if (Number(k.단순) > 0) kingSection += `단순왕: ${formatNum(k.단순)}\n`;
-      if (Number(k.유효) > 0) kingSection += `유효왕: ${formatNum(k.유효)}\n`;
-      if (Number(k.침례) > 0) kingSection += `침례왕: ${formatNum(k.침례)}\n`;
-      if (Number(k.출석) > 0) kingSection += `출석왕: ${formatNum(k.출석)}\n`;
+      // 월간 기록은 전도왕을 집계하지 않으므로 kingRes가 없으면 해당 구간을 통째로 생략
+      let kingSection = '';
+      if (k) {
+        kingSection = `👑${campusName} ${selectedMonth}월 전도왕👑\n\n`;
+        if (Number(k.단순) > 0) kingSection += `단순왕: ${formatNum(k.단순)}\n`;
+        if (Number(k.유효) > 0) kingSection += `유효왕: ${formatNum(k.유효)}\n`;
+        if (Number(k.침례) > 0) kingSection += `침례왕: ${formatNum(k.침례)}\n`;
+        if (Number(k.출석) > 0) kingSection += `출석왕: ${formatNum(k.출석)}\n`;
+      }
 
       let displayDate = dateStr;
       if (dateStr && dateStr.includes('-') && dateStr.length === 10) {
@@ -810,11 +817,13 @@
 단순: ${formatNum(c.단순)}/${formatNum(cg.단순)}(${getPercent(c.단순, cg.단순)}%)
 유효: ${formatNum(c.유효)}/${formatNum(cg.유효)}(${getPercent(c.유효, cg.유효)}%)
 침례: ${formatNum(c.침례)}/${formatNum(cg.침례)}(${getPercent(c.침례, cg.침례)}%)
-출석: ${formatNum(c.출석)}/${formatNum(cg.출석)}(${getPercent(c.출석, cg.출석)}%)
+출석: ${formatNum(c.출석)}/${formatNum(cg.출석)}(${getPercent(c.출석, cg.출석)}%)`;
 
-${kingSection.trim()}
+      if (kingSection) {
+        finalOutput += `\n\n${kingSection.trim()}`;
+      }
 
-(${displayDate}기준)`;
+      finalOutput += `\n\n(${displayDate}기준)`;
 
       if (footerMessage && footerMessage.trim()) {
         finalOutput += `\n\n${footerMessage.trim()}`;
@@ -834,7 +843,10 @@ ${kingSection.trim()}
         overallGoal: { 단순: val('goal_overall_단순'), 유효: val('goal_overall_유효'), 침례: val('goal_overall_침례'), 출석: val('goal_overall_출석') },
         campusRes: { 단순: val('res_campus_단순'), 유효: val('res_campus_유효'), 침례: val('res_campus_침례'), 출석: val('res_campus_출석') },
         campusGoal: { 단순: val('goal_campus_단순'), 유효: val('goal_campus_유효'), 침례: val('goal_campus_침례'), 출석: val('goal_campus_출석') },
-        kingRes: { 단순: val('res_king_단순'), 유효: val('res_king_유효'), 침례: val('res_king_침례'), 출석: val('res_king_출석') },
+        // 전도왕은 월간 기록에는 필요 없으므로, 월간 기간(매달 1일)일 때는 생략
+        kingRes: computeAutoTitle(val('dateStr')).recordType === 'monthly'
+          ? null
+          : { 단순: val('res_king_단순'), 유효: val('res_king_유효'), 침례: val('res_king_침례'), 출석: val('res_king_출석') },
       });
       document.getElementById('outputText').value = finalOutput;
     }
