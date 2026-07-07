@@ -843,10 +843,7 @@
         overallGoal: { 단순: val('goal_overall_단순'), 유효: val('goal_overall_유효'), 침례: val('goal_overall_침례'), 출석: val('goal_overall_출석') },
         campusRes: { 단순: val('res_campus_단순'), 유효: val('res_campus_유효'), 침례: val('res_campus_침례'), 출석: val('res_campus_출석') },
         campusGoal: { 단순: val('goal_campus_단순'), 유효: val('goal_campus_유효'), 침례: val('goal_campus_침례'), 출석: val('goal_campus_출석') },
-        // 전도왕은 월간 기록에는 필요 없으므로, 월간 기간(매달 1일)일 때는 생략
-        kingRes: computeAutoTitle(val('dateStr')).recordType === 'monthly'
-          ? null
-          : { 단순: val('res_king_단순'), 유효: val('res_king_유효'), 침례: val('res_king_침례'), 출석: val('res_king_출석') },
+        kingRes: { 단순: val('res_king_단순'), 유효: val('res_king_유효'), 침례: val('res_king_침례'), 출석: val('res_king_출석') },
       });
       document.getElementById('outputText').value = finalOutput;
     }
